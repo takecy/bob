@@ -27,11 +27,19 @@ Features
 
 Installation
 ----
-via ```go-get```
+#### via go-get
+bob is written by golang.  
+```
+$go version
+go version go1.4.2 darwin/amd64
+```  
+installed in your $GOPATH/src
 ```
 $go get github.com/takecy/bob
 ```
-via binary
+
+#### via binary
+not supported yet.
 ```
 //TODO
 ```
@@ -73,6 +81,13 @@ twitclone:
     jenkins.twc.com
 ```
 
+<br/>
+Development
+----
+1. fork to your repository.
+1. ``` $git clone <your repository url>```
+1. ```$make build```
+1. ```$./bob ping```
 
 <br/>
 License

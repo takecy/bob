@@ -17,22 +17,23 @@ const usage = `
 
   Usage:
     bob ping [--debug]
-    bob jenkins ls
-    bob jenkins ls <jobnumber>
-    bob jenkins build <jobnumber>
+    bob ls
+    bob ls <jobnumber>
+    bob build <jobnumber>
 
   Options:
     --debug           Print debug log.
     -h --help         Print help.
     -v --version      Print version.
     -i identityfile   ssh identityfile path. [default: ~/.ssh/liverpool.pem]
-    -e env            Specify Environment (local|dev|stg). [default: local]
+    --env env         Specify Environment (local|dev|stg). [default: local]
+    --name jobname    Specify jobname, not jobnumber.
 
   Examples:
-    jenkins
-    $bob jenkins ls
-    $bob jenkins ls 30
-    $bob jenkins build 30
+    $bob ls
+    $bob ls --env dev
+    $bob ls 30
+    $bob build 30
 		`
 
 //main
@@ -56,7 +57,7 @@ func main() {
 	case args["ping"].(bool):
 		fmt.Println("PONG")
 
-	case args["jenkins"].(bool) && args["list"].(bool):
+	case args["ls"].(bool):
 		if numberStr, hasName := args["<jobnumber>"].(string); hasName {
 			number, err := strconv.Atoi(numberStr)
 			if err != nil {
@@ -73,7 +74,7 @@ func main() {
 			}
 		}
 
-	case args["jenkins"].(bool) && args["build"].(bool):
+	case args["build"].(bool):
 		fmt.Println("jenkins build")
 		if numberStr, hasName := args["<jobnumber>"].(string); hasName {
 			number, err := strconv.Atoi(numberStr)
