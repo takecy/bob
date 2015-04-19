@@ -17,9 +17,11 @@ const usage = `
 
   Usage:
     bob ping [--debug]
-    bob ls
-    bob ls <jobnumber>
-    bob build <jobnumber>
+    bob ls [--env env]
+    bob ls <jobnumber> [--env env]
+    bob ls [--name <jobname>] [--env env]
+    bob build <jobnumber> [--env env]
+    bob build [--name <jobname>] [--env env]
 
   Options:
     --debug           Print debug log.
@@ -80,12 +82,26 @@ func main() {
 			number, err := strconv.Atoi(numberStr)
 			if err != nil {
 				cli.Fatalf("bad number %s", numberStr)
+				return
 			}
 
 			jobs, _ := cli.ListJobs()
 			job, _ := cli.SelectJob(jobs, number)
 			cli.Build(job, nil)
 			fmt.Println("Build Started: " + job.Name)
+
+		} else if jobName, hasName := args["--name"].(string); hasName {
+			job, err := cli.GetJob(jobName)
+			if err != nil {
+				cli.Fatalf("bad number %s", numberStr)
+				return
+			}
+
+			cli.Build(job, nil)
+			fmt.Println("Build Started: " + job.Name)
+		} else {
+			cli.Fatalf("jobnumber or jobname is required. %s", "build command")
+			return
 		}
 
 	}

@@ -3,6 +3,8 @@ bob
 
 Bob is the Driver of Jenkins.  
 Jenkins is busy, and in everywhere.  (really a lot!)  
+<br/>
+![jenkins](./img/s_jenkins.png)
 ![jenkins](./img/s_jenkins.png)
 ![jenkins](./img/s_jenkins.png)
 ![jenkins](./img/s_jenkins.png)
@@ -50,9 +52,10 @@ Usage
 ---
 ```
 $bob -h
-$bob -v
+```
+exmaple
+```
 $bob ping
-$bob config
 $bob ls <productname>
 $bob ls --env dev
 $bob ls <jobnumber>
