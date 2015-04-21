@@ -45,6 +45,17 @@ func main() {
 		cli.Fatalf("can't get $GOPATH")
 	}
 
+	jenkinsURL := os.Getenv("BOB_JENKINS_URL")
+	if jenkinsURL == "" {
+		// cli.Fatalf("can't get $BOB_JENKINS_URL")
+		// TODO
+		jenkinsURL = "http://jenkins.awa.io"
+	}
+
+	bob := cli.Bob{
+		JenkinsURL: jenkinsURL,
+	}
+
 	args, err := docopt.Parse(usage, nil, true, version, false)
 	if err != nil {
 		cli.Fatalf("error parsing args: %s", err)
@@ -66,18 +77,17 @@ func main() {
 				cli.Fatalf("bad number %s", numberStr)
 			}
 
-			jobs, _ := cli.ListJobs()
-			job, _ := cli.SelectJob(jobs, number)
+			jobs, _ := cli.ListJobs(bob)
+			job, _ := cli.SelectJob(bob, jobs, number)
 			fmt.Printf("[%s]%s\n", job.Color, job.Name)
 		} else {
-			jobs, _ := cli.ListJobs()
+			jobs, _ := cli.ListJobs(bob)
 			for i, job := range jobs {
 				fmt.Printf("[%d][%s]%s\n", i, job.Color, job.Name)
 			}
 		}
 
 	case args["build"].(bool):
-		fmt.Println("jenkins build")
 		if numberStr, hasName := args["<jobnumber>"].(string); hasName {
 			number, err := strconv.Atoi(numberStr)
 			if err != nil {
@@ -85,19 +95,19 @@ func main() {
 				return
 			}
 
-			jobs, _ := cli.ListJobs()
-			job, _ := cli.SelectJob(jobs, number)
-			cli.Build(job, nil)
+			jobs, _ := cli.ListJobs(bob)
+			job, _ := cli.SelectJob(bob, jobs, number)
+			cli.Build(bob, job, nil)
 			fmt.Println("Build Started: " + job.Name)
 
 		} else if jobName, hasName := args["--name"].(string); hasName {
-			job, err := cli.GetJob(jobName)
+			job, err := cli.GetJob(bob, jobName)
 			if err != nil {
 				cli.Fatalf("bad number %s", numberStr)
 				return
 			}
 
-			cli.Build(job, nil)
+			cli.Build(bob, job, nil)
 			fmt.Println("Build Started: " + job.Name)
 		} else {
 			cli.Fatalf("jobnumber or jobname is required. %s", "build command")

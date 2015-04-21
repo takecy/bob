@@ -50,12 +50,18 @@ not supported yet.
 
 Usage
 ---
+should set environment variable, if not use yml of config.
+```
+export BOB_JENKINS_URL=http://jenkins.example.com
+```
+print help
 ```
 $bob -h
 ```
 exmaple
 ```
 $bob ping
+$bob ls
 $bob ls <productname>
 $bob ls --env dev
 $bob ls <jobnumber>
@@ -64,6 +70,7 @@ $bob build <jobnumber>
 $bob build --name <jobname>
 ```
 
+<br/>
 ### Config yaml file
 yml file name must be ```bob.yml```  
 
