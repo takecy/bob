@@ -71,7 +71,7 @@ $bob build --name <jobname>
 yml file name must be ```bob.yml```.  
 You should set environment variable, if not use default config yml.
 ```
-export BOB_CONFIG_PATHL=/tmp/hoge.yml
+export BOB_CONFIG_PATH=/tmp/hoge.yml
 ```
 
 #### example
