@@ -7,6 +7,7 @@ import (
 
 	"github.com/docopt/docopt-go"
 	"github.com/takecy/bob/cli"
+	"github.com/takecy/bob/config"
 )
 
 var version = "0.0.1"
@@ -45,16 +46,12 @@ func main() {
 		cli.Fatalf("can't get $GOPATH")
 	}
 
-	jenkinsURL := os.Getenv("BOB_JENKINS_URL")
-	if jenkinsURL == "" {
-		// cli.Fatalf("can't get $BOB_JENKINS_URL")
-		// TODO
-		jenkinsURL = "http://jenkins.awa.io"
+	configFilePath := os.Getenv("BOB_CONFIG_PATH")
+	if configFilePath == "" {
+		configFilePath = "bob.yml"
 	}
 
-	bob := cli.Bob{
-		JenkinsURL: jenkinsURL,
-	}
+	bob, _ := config.NewConfig(configFilePath)
 
 	args, err := docopt.Parse(usage, nil, true, version, false)
 	if err != nil {

@@ -50,10 +50,6 @@ not supported yet.
 
 Usage
 ---
-should set environment variable, if not use yml of config.
-```
-export BOB_JENKINS_URL=http://jenkins.example.com
-```
 print help
 ```
 $bob -h
@@ -72,7 +68,11 @@ $bob build --name <jobname>
 
 <br/>
 ### Config yaml file
-yml file name must be ```bob.yml```  
+yml file name must be ```bob.yml```.  
+You should set environment variable, if not use default config yml.
+```
+export BOB_CONFIG_PATHL=/tmp/hoge.yml
+```
 
 #### example
 ```
@@ -95,7 +95,7 @@ twitclone:
 Development
 ----
 1. fork to your repository.
-1. ``` $git clone <your repository url>```
+1. ```$git clone <your repository url>```
 1. ```$make build```
 1. ```$./bob ping```
 
