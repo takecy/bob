@@ -50,12 +50,15 @@ not supported yet.
 
 Usage
 ---
+print help
 ```shell
 $bob -h
 ```
+
 exmaple
 ```shell
 $bob ping
+$bob ls
 $bob ls <productname>
 $bob ls --env dev
 $bob ls <jobnumber>
@@ -66,7 +69,8 @@ $bob build --name <jobname>
 
 <br/>
 ### Quick Start
-If you need to drive for only one Jenkins, here.
+#### One Jenkins
+If you need to drive for only one Jenkins.
 ```shell
 $export BOB_JENKINS_PATH=http://jenkins.example.com
 $export BOB_JENKINS_API_TOKEN=absdefgh
@@ -74,12 +78,19 @@ $export BOB_PRODUCT_NAME=funky_pj
 ```
 
 <br/>
-If you need to drive multiple Jenkinses.  
-Define your Jenkins config in `yaml` file.
-### Config yaml file
-yml file name must be ```bob.yml```  
+#### More Jenkins
+If you need to drive multiple Jenkins.  
+Define your Jenkins config in `yaml` file.  
 
-#### Yaml example
+### Config yaml file
+`yaml` file name default is `bob.yml`.  
+and `yaml` file path is execute command directory.  
+Should set environment variable, if you do not want to use default.
+```shell
+$export BOB_CONFIG_PATH=/usr/local/john.yml
+```
+
+#### yaml structure
 ```yaml
 //TODO
 blogs:
@@ -103,6 +114,8 @@ Development
 1. ``` $git clone <your repository url>```
 1. ```$make build```
 1. ```$./bob ping```
+1. modify files and push.
+1. Pull Request !
 
 <br/>
 License

@@ -3,6 +3,7 @@ package cli
 import (
 	"net/url"
 
+	"github.com/takecy/bob/config"
 	gojenkins "github.com/yosida95/golang-jenkins"
 )
 
@@ -14,7 +15,7 @@ var auth = &gojenkins.Auth{
 const jenkinsURL = "http://jenkins.awa.io"
 
 // ListJobs jenkins jobs
-func ListJobs() (jobs []gojenkins.Job, err error) {
+func ListJobs(bob *config.Bob) (jobs []gojenkins.Job, err error) {
 	jenkins := gojenkins.NewJenkins(auth, jenkinsURL)
 	jobs, err = jenkins.GetJobs()
 
@@ -27,7 +28,7 @@ func ListJobs() (jobs []gojenkins.Job, err error) {
 }
 
 // GetJob specify jenkins job
-func GetJob(jobName string) (job gojenkins.Job, err error) {
+func GetJob(bob *config.Bob, jobName string) (job gojenkins.Job, err error) {
 	jenkins := gojenkins.NewJenkins(auth, jenkinsURL)
 	job, err = jenkins.GetJob(jobName)
 
@@ -40,7 +41,7 @@ func GetJob(jobName string) (job gojenkins.Job, err error) {
 }
 
 // Build specify jenkins job
-func Build(job gojenkins.Job, params url.Values) (err error) {
+func Build(bob *config.Bob, job gojenkins.Job, params url.Values) (err error) {
 	jenkins := gojenkins.NewJenkins(auth, jenkinsURL)
 
 	err = jenkins.Build(job, params)
@@ -54,7 +55,7 @@ func Build(job gojenkins.Job, params url.Values) (err error) {
 }
 
 // SelectJob from jobs slice
-func SelectJob(jobs []gojenkins.Job, number int) (job gojenkins.Job, err error) {
+func SelectJob(bob *config.Bob, jobs []gojenkins.Job, number int) (job gojenkins.Job, err error) {
 	for index, job := range jobs {
 		if index == number {
 			return job, nil
