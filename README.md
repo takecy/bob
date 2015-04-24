@@ -31,12 +31,12 @@ Installation
 ----
 #### via go-get
 bob is written by golang.  
-```
+```shell
 $go version
 go version go1.4.2 darwin/amd64
 ```  
 installed in your $GOPATH/src
-```
+```shell
 $go get github.com/takecy/bob
 ```
 
@@ -50,11 +50,11 @@ not supported yet.
 
 Usage
 ---
-```
+```shell
 $bob -h
 ```
 exmaple
-```
+```shell
 $bob ping
 $bob ls <productname>
 $bob ls --env dev
@@ -64,11 +64,23 @@ $bob build <jobnumber>
 $bob build --name <jobname>
 ```
 
+<br/>
+### Quick Start
+If you need to drive for only one Jenkins, here.
+```shell
+$export BOB_JENKINS_PATH=http://jenkins.example.com
+$export BOB_JENKINS_API_TOKEN=absdefgh
+$export BOB_PRODUCT_NAME=funky_pj
+```
+
+<br/>
+If you need to drive multiple Jenkinses.  
+Define your Jenkins config in `yaml` file.
 ### Config yaml file
 yml file name must be ```bob.yml```  
 
-#### example
-```
+#### Yaml example
+```yaml
 //TODO
 blogs:
   dev:
@@ -87,7 +99,7 @@ twitclone:
 <br/>
 Development
 ----
-1. fork to your repository.
+1. Fork to your repository.
 1. ``` $git clone <your repository url>```
 1. ```$make build```
 1. ```$./bob ping```
