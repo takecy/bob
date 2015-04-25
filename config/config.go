@@ -4,17 +4,27 @@ import (
 	"io/ioutil"
 
 	"gopkg.in/yaml.v2"
-
-	gojenkins "github.com/yosida95/golang-jenkins"
 )
 
 // Bob include jenkins info
 type Bob struct {
-	JenkinsURLs   map[string]string
-	JenkinsAuthes map[string]*gojenkins.Auth
+	JenkinsURLs map[string][]ProductConfig
 
 	FilePath string
 }
+
+// JenkinsConfig is jenkins config
+type JenkinsConfig struct {
+	URL   string `yaml:"url"`
+	User  string `yaml:"user"`
+	Token string `yaml:"token"`
+}
+
+// EnvironmentConfig is env config
+type EnvironmentConfig map[string][]JenkinsConfig
+
+// ProductConfig is product config
+type ProductConfig map[string][]EnvironmentConfig
 
 // NewConfig is constructor for Config
 func NewConfig(filePath string) (bob *Bob, err error) {

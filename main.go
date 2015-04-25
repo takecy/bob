@@ -26,12 +26,12 @@ const usage = `
     bob build [--name <jobname>] [--env env]
 
   Options:
-    --debug           Print debug log.
-    -h --help         Print help.
-    -v --version      Print version.
-    -i identityfile   ssh identityfile path. [default: ~/.ssh/liverpool.pem]
-    --env env         Specify Environment (local|dev|stg). [default: local]
-    --name jobname    Specify jobname, not jobnumber.
+    --debug             Print debug log.
+    -h --help           Print help.
+    -v --version        Print version.
+    --env env           Specify Environment. [default: local]
+    --name jobname      Specify jobname, not jobnumber.
+    --config configpath Specify custom config file path.[default: ./bob.yml]
 
   Examples:
     $bob ls
@@ -54,20 +54,37 @@ func main() {
 
 	// for single jenkins
 	jenkinsURL := os.Getenv("BOB_JENKINS_URL")
-	// jenkinsToken := os.Getenv("BOB_JENKINS_API_TOKEN")
+	jenkinsUser := os.Getenv("BOB_JENKINS_USER")
+	jenkinsToken := os.Getenv("BOB_JENKINS_API_TOKEN")
 	jenkinsProductName := os.Getenv("BOB_PRODUCT_NAME")
 
 	bob, err := config.NewConfig(configFilePath)
+
 	if err != nil {
 		// log.Fatal("error read config file")
 
-		jenkinsURLs := make(map[string]string, 5)
-		jenkinsURLs[jenkinsProductName] = jenkinsURL
+		// Create for One jenkins config
+
+		jenkinsURLs := make(map[string][]config.ProductConfig, 1)
+
+		jenkinsConfig := config.JenkinsConfig{
+			URL:   jenkinsURL,
+			User:  jenkinsUser,
+			Token: jenkinsToken,
+		}
+
+		environmentConfig := make(map[string][]config.JenkinsConfig, 1)
+		environmentConfig["local"] = []config.JenkinsConfig{
+			jenkinsConfig,
+		}
+
+		jenkinsURLs[jenkinsProductName] = []config.ProductConfig{
+			config.ProductConfig{},
+		}
 
 		bob = &config.Bob{
-			JenkinsURLs:   jenkinsURLs,
-			JenkinsAuthes: nil,
-			FilePath:      "",
+			JenkinsURLs: jenkinsURLs,
+			FilePath:    "",
 		}
 	}
 
@@ -84,10 +101,12 @@ func main() {
 	switch {
 	case args["env"].(bool):
 		jenkinsURL := os.Getenv("BOB_JENKINS_URL")
+		jenkinsUser := os.Getenv("BOB_JENKINS_USER")
 		jenkinsToken := os.Getenv("BOB_JENKINS_API_TOKEN")
 		jenkinsProductName := os.Getenv("BOB_PRODUCT_NAME")
 
 		fmt.Printf("BOB_JENKINS_URL -> %s\n", jenkinsURL)
+		fmt.Printf("BOB_JENKINS_USER -> %s\n", jenkinsUser)
 		fmt.Printf("BOB_JENKINS_API_TOKEN -> %s\n", jenkinsToken)
 		fmt.Printf("BOB_PRODUCT_NAME -> %s\n", jenkinsProductName)
 

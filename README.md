@@ -73,6 +73,7 @@ $bob build --name <jobname>
 If you need to drive for only one Jenkins.
 ```shell
 $export BOB_JENKINS_URL=http://jenkins.example.com
+$exoirt BOB_JENKINS_USER=jenkins
 $export BOB_JENKINS_API_TOKEN=absdefgh
 $export BOB_PRODUCT_NAME=funky_pj
 ```

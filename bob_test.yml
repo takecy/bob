@@ -1,0 +1,19 @@
+blogs:
+  dev:
+    url: dev-jenkins.blogs.com
+    user: john
+    token: 12345
+  stg:
+    url: stg-jenkins.blogs.com
+    token: abc
+  prd:
+    url: jenkins.blogs.com
+    user: noris
+twitclone:
+  sbx:
+    url: sbx-jenkins.twc.com
+    user: michael
+  prd:
+    url: jenkins.twc.com
+    user: lebron
+    token: james_token
