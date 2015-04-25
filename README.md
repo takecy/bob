@@ -82,7 +82,7 @@ $export BOB_PRODUCT_NAME=funky_pj
 If you need to drive multiple Jenkins.  
 Define your Jenkins config in `yaml` file.  
 
-### Config yaml file
+#### Config yaml file
 `yaml` file name default is `bob.yml`.  
 and `yaml` file path is execute command directory.  
 Should set environment variable, if you do not want to use default.
@@ -90,21 +90,27 @@ Should set environment variable, if you do not want to use default.
 $export BOB_CONFIG_PATH=/usr/local/john.yml
 ```
 
-#### yaml structure
+##### yaml structure
 ```yaml
-//TODO
-blogs:
-  dev:
-    dev-jenkins.blogs.com
+blogs:                         // product name (required)
+  dev:                         // environment  (required)
+    url: dev-jenkins.blogs.com // jenkins URL  (required)
+    user: john                 // jenkins user name (optional)
+    token: 12345               // jenkins API token (optional)
   stg:
-    stg-jenkins.blogs.com
+    url: stg-jenkins.blogs.com
+    token: abc
   prd:
-    jenkins.blogs.com
+    url: jenkins.blogs.com
+    user: noris
 twitclone:
   sbx:
-    sbx-jenkins.twc.com
+    url: sbx-jenkins.twc.com
+    user: michael
   prd:
-    jenkins.twc.com
+    url: jenkins.twc.com
+    user: lebron
+    token: james_token
 ```
 
 <br/>
