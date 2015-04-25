@@ -58,7 +58,7 @@ $bob -h
 exmaple
 ```shell
 $bob ping
-$bob ls
+$bob ls | grep dev
 $bob ls <productname>
 $bob ls --env dev
 $bob ls <jobnumber>
@@ -72,7 +72,7 @@ $bob build --name <jobname>
 #### One Jenkins
 If you need to drive for only one Jenkins.
 ```shell
-$export BOB_JENKINS_PATH=http://jenkins.example.com
+$export BOB_JENKINS_URL=http://jenkins.example.com
 $export BOB_JENKINS_API_TOKEN=absdefgh
 $export BOB_PRODUCT_NAME=funky_pj
 ```

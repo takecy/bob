@@ -14,9 +14,10 @@ var version = "0.0.1"
 
 //command definition
 const usage = `
-  command-line tool for jenkins
+  Bob is driver for Jenkins
 
   Usage:
+    bob env
     bob ping [--debug]
     bob ls [--env env]
     bob ls <jobnumber> [--env env]
@@ -51,7 +52,24 @@ func main() {
 		configFilePath = "bob.yml"
 	}
 
-	bob, _ := config.NewConfig(configFilePath)
+	// for single jenkins
+	jenkinsURL := os.Getenv("BOB_JENKINS_URL")
+	// jenkinsToken := os.Getenv("BOB_JENKINS_API_TOKEN")
+	jenkinsProductName := os.Getenv("BOB_PRODUCT_NAME")
+
+	bob, err := config.NewConfig(configFilePath)
+	if err != nil {
+		// log.Fatal("error read config file")
+
+		jenkinsURLs := make(map[string]string, 5)
+		jenkinsURLs[jenkinsProductName] = jenkinsURL
+
+		bob = &config.Bob{
+			JenkinsURLs:   jenkinsURLs,
+			JenkinsAuthes: nil,
+			FilePath:      "",
+		}
+	}
 
 	args, err := docopt.Parse(usage, nil, true, version, false)
 	if err != nil {
@@ -64,6 +82,15 @@ func main() {
 	}
 
 	switch {
+	case args["env"].(bool):
+		jenkinsURL := os.Getenv("BOB_JENKINS_URL")
+		jenkinsToken := os.Getenv("BOB_JENKINS_API_TOKEN")
+		jenkinsProductName := os.Getenv("BOB_PRODUCT_NAME")
+
+		fmt.Printf("BOB_JENKINS_URL -> %s\n", jenkinsURL)
+		fmt.Printf("BOB_JENKINS_API_TOKEN -> %s\n", jenkinsToken)
+		fmt.Printf("BOB_PRODUCT_NAME -> %s\n", jenkinsProductName)
+
 	case args["ping"].(bool):
 		fmt.Println("PONG")
 
