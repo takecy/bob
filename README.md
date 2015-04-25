@@ -68,7 +68,7 @@ $bob build --name <jobname>
 ```
 
 <br/>
-### Quick Start
+### Configuration
 #### One Jenkins
 If you need to drive for only one Jenkins.
 ```shell
