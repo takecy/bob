@@ -1,8 +1,11 @@
 bob
 ===
 
+Who is Bob?
+----
+
 Bob is the Driver of Jenkins.  
-Jenkins is busy, and in everywhere.  (really a lot!)  
+Jenkins is so busy, and in everywhere.  (really a lot!)  
 <br/>
 ![jenkins](./img/s_jenkins.png)
 ![jenkins](./img/s_jenkins.png)
@@ -15,7 +18,9 @@ Jenkins is busy, and in everywhere.  (really a lot!)
 <br/>
 Some product has Trouble?  
 My phone is receiving alerts now...  
-Responsible Jenkins Where is it!?
+Responsible Jenkins Where is it!?  
+
+Let's listen to Bob !
 
 <br/>
 
@@ -60,7 +65,6 @@ exmaple
 $bob ping
 $bob ls | grep dev
 $bob ls <productname>
-$bob ls --env dev
 $bob ls <jobnumber>
 $bob ls --name <jobname>
 $bob build <jobnumber>
@@ -69,17 +73,6 @@ $bob build --name <jobname>
 
 <br/>
 ### Configuration
-#### One Jenkins
-If you need to drive for only one Jenkins.
-```shell
-$export BOB_JENKINS_URL=http://jenkins.example.com
-$exoirt BOB_JENKINS_USER=jenkins
-$export BOB_JENKINS_API_TOKEN=absdefgh
-$export BOB_PRODUCT_NAME=funky_pj
-```
-
-<br/>
-#### More Jenkins
 If you need to drive multiple Jenkins.  
 Define your Jenkins config in `yaml` file.  
 
@@ -90,6 +83,7 @@ Should set environment variable, if you do not want to use default.
 ```shell
 $export BOB_CONFIG_PATH=/usr/local/john.yml
 ```
+or `--config` option.
 
 ##### yaml structure
 ```yaml

@@ -8,10 +8,15 @@ import (
 
 // Bob include jenkins info
 type Bob struct {
-	JenkinsURLs map[string][]ProductConfig
-
-	FilePath string
+	ProductConfig *ProductConfig
+	FilePath      string
 }
+
+// ProductConfig is product config
+type ProductConfig map[string]EnvironmentConfig
+
+// EnvironmentConfig is env config
+type EnvironmentConfig map[string]JenkinsConfig
 
 // JenkinsConfig is jenkins config
 type JenkinsConfig struct {
@@ -20,12 +25,6 @@ type JenkinsConfig struct {
 	Token string `yaml:"token"`
 }
 
-// EnvironmentConfig is env config
-type EnvironmentConfig map[string][]JenkinsConfig
-
-// ProductConfig is product config
-type ProductConfig map[string][]EnvironmentConfig
-
 // NewConfig is constructor for Config
 func NewConfig(filePath string) (bob *Bob, err error) {
 	b, err := ioutil.ReadFile(filePath)
@@ -33,20 +32,27 @@ func NewConfig(filePath string) (bob *Bob, err error) {
 		return nil, err
 	}
 
-	bob, _ = NewFromString(string(b))
+	bob, err = NewFromString(string(b))
+	if err != nil {
+		return nil, err
+	}
+
 	bob.FilePath = filePath
 
-	return bob, err
+	return
 }
 
 // NewFromString is build config from string
 func NewFromString(config string) (bob *Bob, err error) {
 
-	bob = new(Bob)
-	err = yaml.Unmarshal([]byte(config), &bob)
+	yamlConfig := make(ProductConfig, 0)
+	err = yaml.Unmarshal([]byte(config), &yamlConfig)
 	if err != nil {
 		return nil, err
 	}
+
+	bob = new(Bob)
+	bob.ProductConfig = &yamlConfig
 
 	return
 }

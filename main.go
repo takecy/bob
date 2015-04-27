@@ -17,9 +17,11 @@ const usage = `
   Bob is driver for Jenkins
 
   Usage:
-    bob env
+    bob config
+		bob env
     bob ping [--debug]
     bob ls [--env env]
+		bob ls <productname>
     bob ls <jobnumber> [--env env]
     bob ls [--name <jobname>] [--env env]
     bob build <jobnumber> [--env env]
@@ -42,52 +44,13 @@ const usage = `
 
 //main
 func main() {
+
 	gopath := os.Getenv("GOPATH")
 	if gopath == "" {
 		cli.Fatalf("can't get $GOPATH")
 	}
 
-	configFilePath := os.Getenv("BOB_CONFIG_PATH")
-	if configFilePath == "" {
-		configFilePath = "bob.yml"
-	}
-
-	// for single jenkins
-	jenkinsURL := os.Getenv("BOB_JENKINS_URL")
-	jenkinsUser := os.Getenv("BOB_JENKINS_USER")
-	jenkinsToken := os.Getenv("BOB_JENKINS_API_TOKEN")
-	jenkinsProductName := os.Getenv("BOB_PRODUCT_NAME")
-
-	bob, err := config.NewConfig(configFilePath)
-
-	if err != nil {
-		// log.Fatal("error read config file")
-
-		// Create for One jenkins config
-
-		jenkinsURLs := make(map[string][]config.ProductConfig, 1)
-
-		jenkinsConfig := config.JenkinsConfig{
-			URL:   jenkinsURL,
-			User:  jenkinsUser,
-			Token: jenkinsToken,
-		}
-
-		environmentConfig := make(map[string][]config.JenkinsConfig, 1)
-		environmentConfig["local"] = []config.JenkinsConfig{
-			jenkinsConfig,
-		}
-
-		jenkinsURLs[jenkinsProductName] = []config.ProductConfig{
-			config.ProductConfig{},
-		}
-
-		bob = &config.Bob{
-			JenkinsURLs: jenkinsURLs,
-			FilePath:    "",
-		}
-	}
-
+	// parse command line arguments
 	args, err := docopt.Parse(usage, nil, true, version, false)
 	if err != nil {
 		cli.Fatalf("error parsing args: %s", err)
@@ -98,7 +61,30 @@ func main() {
 		fmt.Println("args", args)
 	}
 
+	var configPath string
+	if path, hasConfig := args["--config"].(string); hasConfig {
+		configPath = path
+	}
+
+	if configPath == "" {
+		configEnvVarPath := os.Getenv("BOB_CONFIG_PATH")
+		if configEnvVarPath != "" {
+			configPath = configEnvVarPath
+		} else {
+			configPath = "bob.yml"
+		}
+	}
+
+	bob, err := config.NewConfig(configPath)
+	if err != nil {
+		cli.Fatalf("read yaml error %s\n", err)
+	}
+
+	// commands switch
 	switch {
+	case args["config"].(bool):
+		fmt.Printf("Bob known Jenkins: \n%v\n", *bob.ProductConfig)
+
 	case args["env"].(bool):
 		jenkinsURL := os.Getenv("BOB_JENKINS_URL")
 		jenkinsUser := os.Getenv("BOB_JENKINS_USER")
