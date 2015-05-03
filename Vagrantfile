@@ -6,4 +6,8 @@ Vagrant.configure(2) do |config|
   config.vm.provider :virtualbox do |box|
     box.name = "centos65-jenkins"
   end
+
+  # config.vm.provision "shell" do |s|
+  #   echo "provision done."
+  # end
 end
