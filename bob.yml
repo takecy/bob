@@ -17,3 +17,6 @@ twitclone:
     url: jenkins.twc.com
     user: lebron
     token: james_token
+hogehoge:
+  local:
+    url: localhost:8888

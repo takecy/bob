@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-// Execute command
+// ExecCommand command
 func ExecCommand(command string, args ...string) (err error) {
 	cmd := exec.Command(command, args...)
 	cmd.Stdin = os.Stdin
@@ -22,7 +22,7 @@ func ExecCommand(command string, args ...string) (err error) {
 	return
 }
 
-// Error logger
+// Fatalf logger
 func Fatalf(msg string, args ...interface{}) {
 	fmt.Fprintf(os.Stderr, "\n  %s\n\n", fmt.Sprintf(msg, args...))
 	os.Exit(1)
