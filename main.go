@@ -18,10 +18,10 @@ const usage = `
 
   Usage:
     bob config
-		bob env
+    bob env
     bob ping [--debug]
     bob ls [--env env]
-		bob ls <productname>
+    bob ls <productname>
     bob ls <jobnumber> [--env env]
     bob ls [--name <jobname>] [--env env]
     bob build <jobnumber> [--env env]
