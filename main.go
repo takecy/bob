@@ -22,8 +22,6 @@ const usage = `
     bob ping [--debug]
     bob ls [--env env]
     bob ls <productname>
-    bob ls <jobnumber> [--env env]
-    bob ls [--name <jobname>] [--env env]
     bob build <jobnumber> [--env env]
     bob build [--name <jobname>] [--env env]
 
@@ -36,9 +34,8 @@ const usage = `
     --config configpath Specify custom config file path.[default: ./bob.yml]
 
   Examples:
-    $bob ls
     $bob ls --env dev
-    $bob ls 30
+    $bob ls hoge_product
     $bob build 30
 		`
 
@@ -86,15 +83,7 @@ func main() {
 		fmt.Printf("Bob known Jenkins: \n%v\n", *bob.ProductConfig)
 
 	case args["env"].(bool):
-		jenkinsURL := os.Getenv("BOB_JENKINS_URL")
-		jenkinsUser := os.Getenv("BOB_JENKINS_USER")
-		jenkinsToken := os.Getenv("BOB_JENKINS_API_TOKEN")
-		jenkinsProductName := os.Getenv("BOB_PRODUCT_NAME")
-
-		fmt.Printf("BOB_JENKINS_URL -> %s\n", jenkinsURL)
-		fmt.Printf("BOB_JENKINS_USER -> %s\n", jenkinsUser)
-		fmt.Printf("BOB_JENKINS_API_TOKEN -> %s\n", jenkinsToken)
-		fmt.Printf("BOB_PRODUCT_NAME -> %s\n", jenkinsProductName)
+		cli.ExecCommand("go", "env")
 
 	case args["ping"].(bool):
 		fmt.Println("PONG")
