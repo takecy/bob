@@ -2,17 +2,17 @@ package entity
 
 // Bob include jenkins info
 type Bob struct {
-	ProductConfig *ProductConfig
+	ProductConfig ProductConfig
 	FilePath      string
 }
 
-// ProductConfig is product config
+// ProductConfig key:prodcutName value:EnvironmentConfig
 type ProductConfig map[string]EnvironmentConfig
 
-// EnvironmentConfig is env config
+// EnvironmentConfig key:environment value:JenkinsConfig
 type EnvironmentConfig map[string]JenkinsConfig
 
-// JenkinsConfig is jenkins config
+// JenkinsConfig is jenkins information
 type JenkinsConfig struct {
 	URL   string `yaml:"url"`
 	User  string `yaml:"user"`

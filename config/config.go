@@ -34,7 +34,7 @@ func NewFromString(config string) (bob *entity.Bob, err error) {
 	}
 
 	bob = new(entity.Bob)
-	bob.ProductConfig = &yamlConfig
+	bob.ProductConfig = yamlConfig
 
 	return
 }

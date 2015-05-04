@@ -27,3 +27,9 @@ func Fatalf(msg string, args ...interface{}) {
 	fmt.Fprintf(os.Stderr, "\n  %s\n\n", fmt.Sprintf(msg, args...))
 	os.Exit(1)
 }
+
+// Printf Printf and exit
+func Printf(format string, args ...interface{}) {
+	fmt.Printf(format, args)
+	os.Exit(1)
+}

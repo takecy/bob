@@ -21,7 +21,7 @@ const usage = `
     bob env
     bob ping [--debug]
     bob ls [--env env]
-    bob ls <productname>
+    bob ls <productname> [--env env]
     bob build <jobnumber> [--env env]
     bob build [--name <jobname>] [--env env]
 
@@ -58,6 +58,12 @@ func main() {
 		fmt.Println("args", args)
 	}
 
+	env := ""
+	if _env, ok := args["--env"].(string); ok {
+		env = _env
+		fmt.Printf("env option -> %s\n", _env)
+	}
+
 	var configPath string
 	if path, hasConfig := args["--config"].(string); hasConfig {
 		configPath = path
@@ -80,29 +86,26 @@ func main() {
 	// commands switch
 	switch {
 	case args["config"].(bool):
-		fmt.Printf("Bob known Jenkins: \n%v\n", *bob.ProductConfig)
+		cli.Printf("Bob known Jenkins: \n%v\n", bob.ProductConfig)
 
 	case args["env"].(bool):
 		cli.ExecCommand("go", "env")
 
 	case args["ping"].(bool):
-		fmt.Println("PONG")
+		cli.Printf("PONG")
 
 	case args["ls"].(bool):
-		if numberStr, hasName := args["<jobnumber>"].(string); hasName {
-			number, err := strconv.Atoi(numberStr)
-			if err != nil {
-				cli.Fatalf("bad number %s", numberStr)
+		if prdName, hasPrdName := args["<productname>"].(string); hasPrdName {
+			prdConf := bob.ProductConfig
+			envConf := prdConf[prdName]
+			if env != "" {
+				jenkinsConf := envConf[env]
+				fmt.Printf("url- %s\nuser- %s\ntoken- %s\n", jenkinsConf.URL, jenkinsConf.User, jenkinsConf.Token)
+				os.Exit(1)
 			}
-
-			jobs, _ := cli.ListJobs(bob)
-			job, _ := cli.SelectJob(bob, jobs, number)
-			fmt.Printf("[%s]%s\n", job.Color, job.Name)
 		} else {
-			jobs, _ := cli.ListJobs(bob)
-			for i, job := range jobs {
-				fmt.Printf("[%d][%s]%s\n", i, job.Color, job.Name)
-			}
+			// TOOD
+			os.Exit(1)
 		}
 
 	case args["build"].(bool):
