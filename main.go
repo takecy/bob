@@ -22,8 +22,8 @@ const usage = `
     bob ping [--debug]
     bob ls [--env env]
     bob ls <productname> [--env env]
-    bob build <jobnumber> [--env env]
-    bob build [--name <jobname>] [--env env]
+    bob build <productname> <jobnumber> [--env env]
+    bob build <productname> [--name <jobname>] [--env env]
 
   Options:
     --debug             Print debug log.
@@ -31,7 +31,7 @@ const usage = `
     -v --version        Print version.
     --env env           Specify Environment. [default: local]
     --name jobname      Specify jobname, not jobnumber.
-    --config configpath Specify custom config file path.[default: ./bob.yml]
+    --config configpath Specify custom config file path. [default: ./bob.yml]
 
   Examples:
     $bob ls --env dev
@@ -74,7 +74,7 @@ func main() {
 		if configEnvVarPath != "" {
 			configPath = configEnvVarPath
 		} else {
-			configPath = "bob.yml"
+			configPath = "./bob.yml"
 		}
 	}
 
@@ -97,10 +97,15 @@ func main() {
 	case args["ls"].(bool):
 		if prdName, hasPrdName := args["<productname>"].(string); hasPrdName {
 			prdConf := bob.ProductConfig
-			envConf := prdConf[prdName]
-			if env != "" {
+			envConf, ok := prdConf[prdName]
+			if ok {
 				jenkinsConf := envConf[env]
-				fmt.Printf("url- %s\nuser- %s\ntoken- %s\n", jenkinsConf.URL, jenkinsConf.User, jenkinsConf.Token)
+				jobs, _ := cli.ListJobs(&jenkinsConf)
+
+				for _, job := range jobs {
+					fmt.Printf("[%s]%s\n", job.Color, job.Name)
+				}
+
 				os.Exit(1)
 			}
 		} else {
@@ -109,29 +114,45 @@ func main() {
 		}
 
 	case args["build"].(bool):
-		if numberStr, hasName := args["<jobnumber>"].(string); hasName {
-			number, err := strconv.Atoi(numberStr)
-			if err != nil {
-				cli.Fatalf("bad number %s", numberStr)
+		if prdName, hasPrdName := args["<productname>"].(string); hasPrdName {
+			prdConf := bob.ProductConfig
+			envConf, ok := prdConf[prdName]
+
+			if ok {
+				jenkinsConf := envConf[env]
+				jobs, _ := cli.ListJobs(&jenkinsConf)
+
+				numStr, given := args["<jobnumber>"].(string)
+
+				if !given {
+					jobName, given := args["--name"].(string)
+					if !given {
+						cli.Fatalf("%s not exists.", "jobnumber")
+						return
+					}
+
+					job, _ := cli.GetJob(&jenkinsConf, jobName)
+
+					go cli.Build(&jenkinsConf, job, nil)
+					fmt.Println("Build Started: " + job.Name)
+
+					os.Exit(1)
+				} else {
+					jobNum, _ := strconv.Atoi(numStr)
+
+					job, _ := cli.SelectJob(jobs, jobNum)
+
+					go cli.Build(&jenkinsConf, job, nil)
+					fmt.Println("Build Started: " + job.Name)
+
+					os.Exit(1)
+				}
+			} else {
+				cli.Fatalf("%s not exists.", "productname")
 				return
 			}
-
-			jobs, _ := cli.ListJobs(bob)
-			job, _ := cli.SelectJob(bob, jobs, number)
-			cli.Build(bob, job, nil)
-			fmt.Println("Build Started: " + job.Name)
-
-		} else if jobName, hasName := args["--name"].(string); hasName {
-			job, err := cli.GetJob(bob, jobName)
-			if err != nil {
-				cli.Fatalf("bad number %s", numberStr)
-				return
-			}
-
-			cli.Build(bob, job, nil)
-			fmt.Println("Build Started: " + job.Name)
 		} else {
-			cli.Fatalf("jobnumber or jobname is required. %s", "build command")
+			cli.Fatalf("%s required.", "productname")
 			return
 		}
 

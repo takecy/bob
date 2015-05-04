@@ -7,16 +7,13 @@ import (
 	gojenkins "github.com/yosida95/golang-jenkins"
 )
 
-var auth = &gojenkins.Auth{
-	Username: "",
-	ApiToken: "",
-}
-
-const jenkinsURL = "http://jenkins.awa.io"
-
 // ListJobs jenkins jobs
-func ListJobs(bob *entity.Bob) (jobs []gojenkins.Job, err error) {
-	jenkins := gojenkins.NewJenkins(auth, jenkinsURL)
+func ListJobs(conf *entity.JenkinsConfig) (jobs []gojenkins.Job, err error) {
+	auth := &gojenkins.Auth{
+		Username: conf.User,
+		ApiToken: conf.Token,
+	}
+	jenkins := gojenkins.NewJenkins(auth, conf.URL)
 	jobs, err = jenkins.GetJobs()
 
 	if err != nil {
@@ -28,8 +25,12 @@ func ListJobs(bob *entity.Bob) (jobs []gojenkins.Job, err error) {
 }
 
 // GetJob specify jenkins job
-func GetJob(bob *entity.Bob, jobName string) (job gojenkins.Job, err error) {
-	jenkins := gojenkins.NewJenkins(auth, jenkinsURL)
+func GetJob(conf *entity.JenkinsConfig, jobName string) (job gojenkins.Job, err error) {
+	auth := &gojenkins.Auth{
+		Username: conf.User,
+		ApiToken: conf.Token,
+	}
+	jenkins := gojenkins.NewJenkins(auth, conf.URL)
 	job, err = jenkins.GetJob(jobName)
 
 	if err != nil {
@@ -41,9 +42,12 @@ func GetJob(bob *entity.Bob, jobName string) (job gojenkins.Job, err error) {
 }
 
 // Build specify jenkins job
-func Build(bob *entity.Bob, job gojenkins.Job, params url.Values) (err error) {
-	jenkins := gojenkins.NewJenkins(auth, jenkinsURL)
-
+func Build(conf *entity.JenkinsConfig, job gojenkins.Job, params url.Values) (err error) {
+	auth := &gojenkins.Auth{
+		Username: conf.User,
+		ApiToken: conf.Token,
+	}
+	jenkins := gojenkins.NewJenkins(auth, conf.URL)
 	err = jenkins.Build(job, params)
 
 	if err != nil {
@@ -55,7 +59,7 @@ func Build(bob *entity.Bob, job gojenkins.Job, params url.Values) (err error) {
 }
 
 // SelectJob from jobs slice
-func SelectJob(bob *entity.Bob, jobs []gojenkins.Job, number int) (job gojenkins.Job, err error) {
+func SelectJob(jobs []gojenkins.Job, number int) (job gojenkins.Job, err error) {
 	for index, job := range jobs {
 		if index == number {
 			return job, nil

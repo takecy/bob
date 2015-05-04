@@ -1,22 +1,22 @@
 blogs:
   dev:
-    url: dev-jenkins.blogs.com
+    url: http://dev-jenkins.blogs.com
     user: john
     token: 12345
   stg:
-    url: stg-jenkins.blogs.com
+    url: http://stg-jenkins.blogs.com
     token: abc
   prd:
-    url: jenkins.blogs.com
+    url: http://jenkins.blogs.com
     user: noris
 twitclone:
   sbx:
-    url: sbx-jenkins.twc.com
+    url: http://sbx-jenkins.twc.com
     user: michael
   prd:
-    url: jenkins.twc.com
+    url: http://jenkins.twc.com
     user: lebron
     token: james_token
 hogehoge:
   local:
-    url: localhost:8888
+    url: http://localhost:8888
