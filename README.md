@@ -112,11 +112,14 @@ twitclone:
 Development
 ----
 1. Fork to your repository.
-1. ``` $git clone <your repository url>```
-1. ```$make build```
-1. ```$./bob ping```
 1. modify files and push.
 1. Pull Request !
+
+```shell
+$godep restore
+$make build
+$DEBUG=* ./bob ping
+```
 
 <br/>
 License

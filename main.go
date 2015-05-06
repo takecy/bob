@@ -8,8 +8,11 @@ import (
 	"github.com/docopt/docopt-go"
 	"github.com/takecy/bob/cli"
 	"github.com/takecy/bob/config"
+
+	d "github.com/tj/go-debug"
 )
 
+var debug = d.Debug("main")
 var version = "0.0.1"
 
 //command definition
@@ -19,14 +22,13 @@ const usage = `
   Usage:
     bob config
     bob env
-    bob ping [--debug]
+    bob ping
     bob ls [--env env]
     bob ls <productname> [--env env]
     bob build <productname> <jobnumber> [--env env]
     bob build <productname> [--name <jobname>] [--env env]
 
   Options:
-    --debug             Print debug log.
     -h --help           Print help.
     -v --version        Print version.
     --env env           Specify Environment. [default: local]
@@ -53,15 +55,12 @@ func main() {
 		cli.Fatalf("error parsing args: %s", err)
 	}
 
-	if args["--debug"].(bool) {
-		fmt.Printf("$GOAPTH -> %s\n", gopath)
-		fmt.Println("args", args)
-	}
+	debug("[GOPATH] %s", gopath)
+	debug("[args] %s", args)
 
 	env := ""
 	if _env, ok := args["--env"].(string); ok {
 		env = _env
-		fmt.Printf("env option -> %s\n", _env)
 	}
 
 	var configPath string
@@ -69,14 +68,18 @@ func main() {
 		configPath = path
 	}
 
+	configEnvVarPath := os.Getenv("BOB_CONFIG_PATH")
 	if configPath == "" {
-		configEnvVarPath := os.Getenv("BOB_CONFIG_PATH")
 		if configEnvVarPath != "" {
 			configPath = configEnvVarPath
 		} else {
 			configPath = "./bob.yml"
 		}
 	}
+
+	debug("[BOB_CONFIG_PATH] %s", configEnvVarPath)
+	debug("[env] %s", env)
+	debug("[configPath] %s", configPath)
 
 	bob, err := config.NewConfig(configPath)
 	if err != nil {
@@ -102,14 +105,23 @@ func main() {
 				jenkinsConf := envConf[env]
 				jobs, _ := cli.ListJobs(&jenkinsConf)
 
-				for _, job := range jobs {
-					fmt.Printf("[%s]%s\n", job.Color, job.Name)
+				for index, job := range jobs {
+					fmt.Printf("%d:[%s]%s\n", index, job.Color, job.Name)
 				}
 
 				os.Exit(1)
 			}
 		} else {
-			// TOOD
+			for prdName, envConf := range bob.ProductConfig {
+				fmt.Printf("[%s]\n", prdName)
+
+				for envName, jenkinsConf := range envConf {
+					fmt.Printf("- %s\n", envName)
+					fmt.Printf("  - %s\n", jenkinsConf.URL)
+					fmt.Printf("  - %s\n", jenkinsConf.User)
+					fmt.Printf("  - %s\n", jenkinsConf.Token)
+				}
+			}
 			os.Exit(1)
 		}
 
@@ -133,7 +145,7 @@ func main() {
 
 					job, _ := cli.GetJob(&jenkinsConf, jobName)
 
-					go cli.Build(&jenkinsConf, job, nil)
+					cli.Build(&jenkinsConf, job, nil)
 					fmt.Println("Build Started: " + job.Name)
 
 					os.Exit(1)
@@ -142,7 +154,7 @@ func main() {
 
 					job, _ := cli.SelectJob(jobs, jobNum)
 
-					go cli.Build(&jenkinsConf, job, nil)
+					cli.Build(&jenkinsConf, job, nil)
 					fmt.Println("Build Started: " + job.Name)
 
 					os.Exit(1)
