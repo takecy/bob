@@ -59,16 +59,31 @@ print help
 ```shell
 $bob -h
 ```
+```
+Usage:
+  bob config
+  bob env
+  bob ping
+  bob ls [--env env]
+  bob ls <productname> [--env env]
+  bob build <productname> <jobnumber> [--env env]
+  bob build <productname> [--name <jobname>] [--env env]
+
+Options:
+  -h --help           Print help.
+  -v --version        Print version.
+  --env env           Specify Environment. [default: local]
+  --name jobname      Specify jobname, not jobnumber.
+  --config configpath Specify custom config file path. [default: ./bob.yml]
+
+```
 
 exmaple
 ```shell
 $bob ping
 $bob ls | grep dev
-$bob ls <productname>
-$bob ls <jobnumber>
-$bob ls --name <jobname>
-$bob build <jobnumber>
-$bob build --name <jobname>
+$bob ls hogeproject
+$bob build hogeproject 23
 ```
 
 <br/>
