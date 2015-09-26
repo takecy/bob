@@ -1,5 +1,6 @@
 bob
 ===
+[![GoDoc](https://godoc.org/github.com/takecy/bob?status.svg)](https://godoc.org/github.com/takecy/bob)
 
 Who is Bob?
 ----
