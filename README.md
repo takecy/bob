@@ -17,6 +17,7 @@ Jenkins is so busy, and in everywhere.  (really a lot!)
 .....  
 
 <br/>
+
 Some product has Trouble?  
 My phone is receiving alerts now...  
 Responsible Jenkins Where is it!?  
@@ -88,6 +89,7 @@ $bob build hogeproject 23
 ```
 
 <br/>
+
 ### Configuration
 If you need to drive multiple Jenkins.  
 Define your Jenkins config in `yaml` file.  
@@ -125,8 +127,8 @@ twitclone:
 ```
 
 <br/>
-Development
-----
+
+## Development
 1. Fork to your repository.
 1. modify files and push.
 1. Pull Request !
@@ -138,6 +140,6 @@ $DEBUG=* ./bob ping
 ```
 
 <br/>
-License
-----
+
+### License
 MIT
